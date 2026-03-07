@@ -1,0 +1,245 @@
+import json
+import os
+import threading
+import tkinter as tk
+from tkinter import scrolledtext, messagebox
+from typing import Optional
+
+import urllib.request
+import urllib.error
+
+
+API_URL_DEFAULT = "http://127.0.0.1:8000"
+
+# Supported languages for Jubei - language - XX
+SUPPORTED_LANGUAGES = {
+    "en": "English",
+    "ja": "Japanese",
+    "es": "Spanish",
+    "de": "German",
+    "ru": "Russian",
+}
+
+
+class JubeiDesktopApp:
+    def __init__(self, root: tk.Tk):
+        self.root = root
+        self.root.title("Project Jubei – Desktop Chat")
+
+        # Current personality mode: "ninja" or "schoolgirl"
+        self.mode = "ninja"
+        # Current response language: en, ja, es, de, ru
+        self.language = "en"
+
+        # API configuration
+        self.api_url = os.getenv("JUBIE_API_URL", API_URL_DEFAULT).rstrip("/")
+        self.api_key = os.getenv("JUBIE_API_KEY")
+
+        self._build_ui()
+        self._print_system_message(
+            "Welcome to Jubei-Chan's desktop chat.\n"
+            "- Make sure the HTTP server is running: `python jubie_api.py`.\n"
+            "- Current mode: Ninja Mode. Type 'Jubei - transform' to switch personalities.\n"
+            "- Type 'Jubei - Switch - Katherine' or 'Jubei - Switch - Komi' for other characters; "
+            "'Katherine - Switch - Jubei' or 'Komi - Switch - Jubei' to return.\n"
+            "- Type 'Jubei - language - XX' to change language (ja, es, de, ru, en).\n"
+            "- Easter eggs: 'Jubei - Tempel', 'Jubei - Tux', 'Jubei - Young', "
+            "'Jubei - Slice' (stop music).\n"
+        )
+
+    def _build_ui(self) -> None:
+        # Conversation area
+        self.text_area = scrolledtext.ScrolledText(self.root, wrap=tk.WORD, state="disabled", height=20)
+        self.text_area.pack(fill=tk.BOTH, expand=True, padx=8, pady=8)
+
+        # Bottom frame: input + buttons
+        bottom = tk.Frame(self.root)
+        bottom.pack(fill=tk.X, padx=8, pady=(0, 8))
+
+        self.entry = tk.Entry(bottom)
+        self.entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        self.entry.bind("<Return>", self._on_send)
+
+        send_btn = tk.Button(bottom, text="Send", command=self._on_send)
+        send_btn.pack(side=tk.LEFT, padx=(4, 0))
+
+        transform_btn = tk.Button(bottom, text="Jubei - transform", command=self._on_transform)
+        transform_btn.pack(side=tk.LEFT, padx=(4, 0))
+
+        switch_btn = tk.Button(bottom, text="Switch character", command=self._on_switch_character)
+        switch_btn.pack(side=tk.LEFT, padx=(4, 0))
+
+        # Language dropdown
+        self.language_var = tk.StringVar(value="en")
+        lang_menu = tk.OptionMenu(
+            bottom, self.language_var, *SUPPORTED_LANGUAGES.keys(),
+            command=self._on_language_change
+        )
+        lang_menu.pack(side=tk.LEFT, padx=(4, 0))
+
+        self.mode_label = tk.Label(bottom, text="Mode: ninja")  # ninja, schoolgirl, or katherine
+        self.mode_label.pack(side=tk.LEFT, padx=(8, 0))
+        self.lang_label = tk.Label(bottom, text="Lang: en")
+        self.lang_label.pack(side=tk.LEFT, padx=(8, 0))
+
+    def _append_text(self, prefix: str, text: str) -> None:
+        self.text_area.configure(state="normal")
+        self.text_area.insert(tk.END, f"{prefix}{text}\n\n")
+        self.text_area.see(tk.END)
+        self.text_area.configure(state="disabled")
+
+    def _print_system_message(self, msg: str) -> None:
+        self._append_text("[System] ", msg)
+
+    def _on_send(self, event=None) -> None:  # type: ignore[override]
+        message = self.entry.get().strip()
+        if not message:
+            return
+        self.entry.delete(0, tk.END)
+        self._append_text("[You] ", message)
+        threading.Thread(target=self._send_message, args=(message,), daemon=True).start()
+
+    def _on_transform(self) -> None:
+        # Just send the special transform message with previous personality.
+        self._append_text("[You] ", "Jubei - transform")
+        threading.Thread(
+            target=self._send_transform,
+            args=("Jubei - transform",),
+            daemon=True,
+        ).start()
+
+    def _on_switch_character(self) -> None:
+        """Cycle character: Jubei -> Katherine -> Komi -> Jubei."""
+        if self.mode == "katherine":
+            cmd = "Jubei - Switch - Komi"
+        elif self.mode == "komi":
+            cmd = "Komi - Switch - Jubei"
+        else:
+            cmd = "Jubei - Switch - Katherine"
+        self._append_text("[You] ", cmd)
+        threading.Thread(target=self._send_message, args=(cmd,), daemon=True).start()
+
+    def _on_language_change(self, abbrev: str) -> None:
+        self.language = abbrev
+        self._update_lang_label()
+        # Optionally send the language command to the API for consistency
+        self._append_text("[You] ", f"Jubei - language - {abbrev}")
+        threading.Thread(
+            target=self._send_language_change,
+            args=(abbrev,),
+            daemon=True,
+        ).start()
+
+    def _update_lang_label(self) -> None:
+        self.lang_label.configure(text=f"Lang: {self.language}")
+
+    def _send_language_change(self, abbrev: str) -> None:
+        payload = {
+            "message": f"Jubei - language - {abbrev}",
+        }
+        resp = self._post_json("/chat", payload)
+        if not resp:
+            return
+        if resp.get("language_change"):
+            self.language = resp.get("language", abbrev)
+            self._update_lang_label()
+        reply = resp.get("reply", "")
+        self._append_text(self._sender_label(), reply)
+
+    def _post_json(self, path: str, payload: dict) -> Optional[dict]:
+        url = f"{self.api_url}{path}"
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+
+        if self.api_key:
+            req.add_header("X-Jubie-Api-Key", self.api_key)
+
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                body = resp.read().decode("utf-8")
+                return json.loads(body)
+        except urllib.error.HTTPError as e:
+            try:
+                detail = e.read().decode("utf-8")
+            except Exception:
+                detail = ""
+            self._print_system_message(f"HTTP error {e.code}: {detail or e.reason}")
+        except urllib.error.URLError as e:
+            self._print_system_message(f"Connection error: {e.reason}. Is `jubie_api.py` running?")
+        except Exception as e:  # pragma: no cover - generic fallback
+            self._print_system_message(f"Unexpected error: {e}")
+        return None
+
+    def _sender_label(self) -> str:
+        """Label for the current character in chat."""
+        if self.mode == "katherine":
+            return "[Katherine] "
+        if self.mode == "komi":
+            return "[Komi] "
+        return f"[Jubei-Chan ({self.mode})] "
+
+    def _send_message(self, message: str) -> None:
+        payload = {
+            "message": message,
+            "personality": self.mode,
+            "language": self.language,
+        }
+        resp = self._post_json("/chat", payload)
+        if not resp:
+            return
+        # Handle character switch (Jubei - Switch - Katherine / Katherine - Switch - Jubei)
+        if resp.get("character_switch"):
+            self.mode = resp.get("mode", self.mode)
+            self._update_mode_label()
+            self._append_text(self._sender_label(), resp.get("reply", ""))
+            return
+        # Handle language change (user typed "Jubei - language - XX")
+        if resp.get("language_change"):
+            self.language = resp.get("language", self.language)
+            self.language_var.set(self.language)
+            self._update_lang_label()
+        reply = resp.get("reply", "")
+        mode = resp.get("mode", self.mode)
+        self.mode = mode
+        self._update_mode_label()
+        self._append_text(self._sender_label(), reply)
+
+    def _send_transform(self, message: str) -> None:
+        payload = {
+            "message": message,
+            "previous_personality": self.mode,
+        }
+        resp = self._post_json("/chat", payload)
+        if not resp:
+            return
+        # Transform responses carry the new mode explicitly.
+        if resp.get("transform"):
+            self.mode = resp.get("mode", self.mode)
+            self._update_mode_label()
+        reply = resp.get("reply", "")
+        self._append_text(self._sender_label(), reply)
+
+    def _update_mode_label(self) -> None:
+        if self.mode == "katherine":
+            display = "Katherine"
+        elif self.mode == "komi":
+            display = "Komi"
+        else:
+            display = self.mode
+        self.mode_label.configure(text=f"Mode: {display}")
+
+
+def main() -> None:
+    root = tk.Tk()
+    try:
+        app = JubeiDesktopApp(root)
+    except Exception as e:  # pragma: no cover - startup errors
+        messagebox.showerror("Project Jubei", f"Failed to start Jubei desktop app:\n{e}")
+        root.destroy()
+        return
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
+
