@@ -22,6 +22,8 @@ Jubei - Switch - Katherine    (activates Katherine)
 Katherine - Switch - Jubei    (returns to Jubei-Chan in Highschool Girl Mode)
 Jubei - Switch - Komi         (activates Komi)
 Komi - Switch - Jubei        (returns to Jubei-Chan in Highschool Girl Mode)
+Katherine - Switch - Komi      (switches directly from Katherine to Komi)
+Komi - Switch - Katherine    (switches directly from Komi to Katherine)
 ```
 
 You can also make Jubei-Chan respond in different languages:
@@ -34,13 +36,31 @@ Jubei - language - ru    (Russian)
 Jubei - language - en    (English, default)
 ```
 
-**Easter eggs** – try these secret commands:
+**Open Krita / VLC / Oneko / GIMP / Ani-cli / Hollywood** – type:
 
 ```text
-Jubei - Tempel    (plays Temple OS theme)
-Jubei - Tux       (shows Tux, the Linux mascot)
-Jubei - Young     (plays a song)
-Jubei - Slice     (stops any playing music)
+Open - Krita       (opens Krita if installed; otherwise shows how to install it)
+Open - VLC         (opens VLC; installs it via apt if missing on Linux Mint)
+Open - Oneko       (opens Oneko; installs it via apt if missing on Linux Mint)
+Slice - Oneko      (stops a running Oneko)
+Open - GNU         (opens the GNU Image Manipulation Program, GIMP; installs it via apt if missing)
+Open - Ani-cli     (opens ani-cli in a new terminal; requires ani-cli to be installed separately)
+Slice - Ani-cli    (stops ani-cli)
+Open - Hollywood   (opens Hollywood in a new terminal; installs it via apt if missing)
+Slice - Hollywood  (stops Hollywood)
+```
+
+**Easter eggs** – try these secret commands (work with Jubei, Katherine, or Komi):
+
+```text
+Jubei - Tempel      (plays Temple OS theme)
+Jubei - Tux         (shows Tux, the Linux mascot)
+Jubei - Young       (plays a song)
+Jubei - Kino        (plays Kino - A pack of Cigarettes)
+Jubei - Slice       (stops any playing music)
+Jubei - Creator     (shows creator credits)
+Jubei - Mint        (opens the official Linux Mint website)
+Jubei - Cinnamon    (opens the Cinnamon themes website)
 ```
 
 > Note: Jubei-Chan is loosely inspired by the main character of an anime, but
@@ -60,15 +80,31 @@ Jubei - Slice     (stops any playing music)
   - Default: **Ninja Mode** – serious mentor, step-by-step explanations. Users can ask **any question** (not just Linux) with full freedom.
   - Alternate: **Highschool Girl Mode** – more casual, chatty tone. In this mode, Jubei-Chan can answer **any question** (not just Linux) more freely.
   - Switch with: `Jubei - transform`.
-  - **Katherine** – inspired by Miyuki Kobayakawa (You're Under Arrest): brainy, polite, technical genius, punctual, shy, diligent, voice of reason. Answers any topic. Switch with: `Jubei - Switch - Katherine` and `Katherine - Switch - Jubei`.
-  - **Komi** – inspired by Natsumi Tsujimoto (You're Under Arrest): outgoing, laid-back, fun-loving, dependable when it matters. Answers any topic. Switch with: `Jubei - Switch - Komi` and `Komi - Switch - Jubei`.
+  - **Katherine** – inspired by Miyuki Kobayakawa (You're Under Arrest): brainy, polite, technical genius, punctual, shy, diligent, voice of reason. Answers any topic. Switch with: `Jubei - Switch - Katherine`, `Katherine - Switch - Jubei`, or `Katherine - Switch - Komi`.
+  - **Komi** – inspired by Natsumi Tsujimoto (You're Under Arrest): outgoing, laid-back, fun-loving, dependable when it matters. Answers any topic. Switch with: `Jubei - Switch - Komi`, `Komi - Switch - Jubei`, or `Komi - Switch - Katherine`.
 
 - **Multi-language responses**
   - Jubei-Chan can respond in Japanese (ja), Spanish (es), German (de), Russian (ru), or English (en).
   - Use: `Jubei - language - XX` where XX is the language abbreviation.
 
+- **Open Krita / VLC / Oneko / GIMP / Ani-cli / Hollywood**
+  - `Open - Krita`  
+    - Jubei-Chan checks if Krita is already installed (including Flatpak) and opens it if found.  
+    - If Krita is missing, she explains how to install it on Linux Mint (for example, `sudo apt install krita`) instead of trying to re-download it.
+  - `Open - VLC`  
+    - Jubei-Chan checks across typical Linux Mint locations (native package, Flatpak, Snap) and opens VLC when it’s already installed.  
+    - If VLC is not installed, she will install it for you using `sudo apt-get install -y vlc` and then open it.
+  - `Open - Oneko` / `Slice - Oneko`  
+    - `Open - Oneko` starts the Oneko desktop pet (installing the `oneko` package via apt first if it isn’t present).  
+    - `Slice - Oneko` cleanly stops Oneko, even if it was started earlier.
+  - `Open - GNU` / `Open - Ani-cli` / `Open - Hollywood`  
+    - `Open - GNU` opens the GNU Image Manipulation Program, GIMP. If it is not installed, Jubei-Chan will install the `gimp` package via apt and then open it.  
+    - `Open - Ani-cli` opens the ani-cli terminal client in a new terminal window (ani-cli must already be installed separately). `Slice - Ani-cli` tries to stop any running ani-cli sessions.  
+    - `Open - Hollywood` opens the Hollywood terminal effect in a new terminal window (installing the `hollywood` package via apt first if needed). `Slice - Hollywood` stops any running Hollywood sessions.
+
 - **Easter eggs**
-  - `Jubei - Tempel` (Temple OS theme), `Jubei - Tux` (Linux mascot), `Jubei - Young` (song), `Jubei - Slice` (stop music).
+  - `Jubei - Tempel` (Temple OS theme), `Jubei - Tux` (Linux mascot), `Jubei - Young` (song), `Jubei - Kino` (Kino song), `Jubei - Slice` (stop music). Work with Jubei, Katherine, or Komi.
+  - `CREATOR` shows creator credits (Hector Flores / Mighty Senketsu).
 
 - **Internal API key for Jubei-Chan**
   - Optional **JUBIE_API_KEY** protection so only you (or your apps) can use her.
@@ -284,11 +320,16 @@ Jubei-Chan has a few hidden commands for fun:
 | `Jubei - Tempel` | Plays the Temple OS theme from YouTube |
 | `Jubei - Tux` | Shows Tux, the Linux penguin mascot, as ASCII art |
 | `Jubei - Young` | Plays a song from YouTube |
-| `Jubei - Slice` | Stops any music that was started by Tempel or Young |
+| `Jubei - Kino` | Plays Kino - A pack of Cigarettes from YouTube |
+| `Jubei - Slice` | Stops any music that was started by Tempel, Young, or Kino |
+| `Jubei - Creator` | Shows creator credits (Hector Flores / Mighty Senketsu) |
+| `Jubei - Mint` | Opens the official Linux Mint website |
+| `Jubei - Cinnamon` | Opens the Cinnamon themes website |
 
 Music playback uses **mpv** if installed (audio-only); otherwise it opens the
 YouTube link in your default browser. Type `Jubei - Slice` to stop music when
-using mpv. *(If opened in a browser, close the tab to stop.)*
+using mpv. *(If opened in a browser, close the tab to stop.)* Easter eggs also
+work when Katherine or Komi is active (e.g. `Katherine - Tempel`).
 
 ---
 
@@ -636,8 +677,24 @@ For subsequent chat requests, send `"personality": "katherine"` or `"personality
   Jubei - transform              (toggle Ninja / Highschool Girl)
   Jubei - Switch - Katherine     (switch to Katherine)
   Katherine - Switch - Jubei     (switch back to Jubei-Chan)
-  Jubei - Switch - Komi         (switch to Komi)
-  Komi - Switch - Jubei        (switch back to Jubei-Chan)
+  Jubei - Switch - Komi          (switch to Komi)
+  Komi - Switch - Jubei          (switch back to Jubei-Chan)
+  Katherine - Switch - Komi     (Katherine → Komi)
+  Komi - Switch - Katherine     (Komi → Katherine)
+  ```
+
+- Open Krita / VLC / Oneko / GIMP / Ani-cli / Hollywood:
+
+  ```text
+  Open - Krita       (open Krita if installed; otherwise get install instructions)
+  Open - VLC         (open VLC, installing it with apt if missing)
+  Open - Oneko       (open Oneko, installing it with apt if missing)
+  Slice - Oneko      (stop Oneko)
+  Open - GNU         (open GIMP, installing it via apt if missing)
+  Open - Ani-cli     (open ani-cli in a new terminal; requires ani-cli to be installed separately)
+  Slice - Ani-cli    (stop ani-cli)
+  Open - Hollywood   (open Hollywood in a new terminal, installing it via apt if missing)
+  Slice - Hollywood  (stop Hollywood)
   ```
 
 - Change language (Japanese, Spanish, German, Russian, or English):
@@ -650,7 +707,7 @@ For subsequent chat requests, send `"personality": "katherine"` or `"personality
   Jubei - language - en
   ```
 
-- Easter eggs: `Jubei - Tempel`, `Jubei - Tux`, `Jubei - Young`, `Jubei - Slice`.
+- Easter eggs: `Jubei - Tempel`, `Jubei - Tux`, `Jubei - Young`, `Jubei - Kino`, `Jubei - Slice`, `Jubei - Creator`, `Jubei - Mint`, `Jubei - Cinnamon`.
 
 - Protect her with an internal API key:
   - Add `JUBIE_API_KEY=your_secret` to `.env` or your shell.
@@ -674,7 +731,8 @@ For subsequent chat requests, send `"personality": "katherine"` or `"personality
 
   - Set `JUBIE_API_URL` if you change the API port or host.
   - Set `JUBIE_API_KEY` to protect both the API and the desktop app.
-  - Use the **Switch character** button or type `Jubei - Switch - Katherine` / `Jubei - Switch - Komi` / `Katherine - Switch - Jubei` / `Komi - Switch - Jubei` to cycle between Jubei-Chan, Katherine, and Komi.
+  - Use the **Switch character** button or type `Jubei - Switch - Katherine` / `Jubei - Switch - Komi` / `Katherine - Switch - Jubei` / `Komi - Switch - Jubei` / `Katherine - Switch - Komi` / `Komi - Switch - Katherine` to cycle between Jubei-Chan, Katherine, and Komi.
+  - Type `Open - Krita` to open Krita.
 
 Enjoy learning Linux Mint with Jubei-Chan!
 

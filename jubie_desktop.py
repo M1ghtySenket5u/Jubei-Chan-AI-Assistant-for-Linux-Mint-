@@ -41,10 +41,21 @@ class JubeiDesktopApp:
             "- Make sure the HTTP server is running: `python jubie_api.py`.\n"
             "- Current mode: Ninja Mode. Type 'Jubei - transform' to switch personalities.\n"
             "- Type 'Jubei - Switch - Katherine' or 'Jubei - Switch - Komi' for other characters; "
-            "'Katherine - Switch - Jubei' or 'Komi - Switch - Jubei' to return.\n"
+            "'Katherine - Switch - Jubei', 'Komi - Switch - Jubei', "
+            "'Katherine - Switch - Komi', or 'Komi - Switch - Katherine' to switch.\n"
+            "- Type 'Open - Krita' to open Krita.\n"
+            "- Type 'Open - VLC' to open VLC (installs if missing).\n"
+            "- Type 'Open - Oneko' to open Oneko (installs if missing).\n"
+            "- Type 'Slice - Oneko' to stop Oneko.\n"
+            "- Type 'Open - GNU' to open the GNU Image Manipulation Program (GIMP) (installs if missing).\n"
+            "- Type 'Open - Ani-cli' to open ani-cli in a new terminal, and 'Slice - Ani-cli' to stop it.\n"
+            "- Type 'Open - Hollywood' to open Hollywood in a new terminal, and 'Slice - Hollywood' to stop it.\n"
             "- Type 'Jubei - language - XX' to change language (ja, es, de, ru, en).\n"
-            "- Easter eggs: 'Jubei - Tempel', 'Jubei - Tux', 'Jubei - Young', "
-            "'Jubei - Slice' (stop music).\n"
+            "- Easter eggs (Jubei, Katherine, or Komi): 'Jubei - Tempel', 'Jubei - Tux', "
+            "'Jubei - Young', 'Jubei - Kino', 'Jubei - Slice' (stop music).\n"
+            "- Easter egg: 'Jubei - Creator' to learn about the creator.\n"
+            "- Easter eggs: 'Jubei - Mint' opens the Linux Mint website; "
+            "'Jubei - Cinnamon' opens the Cinnamon themes website.\n"
         )
 
     def _build_ui(self) -> None:
@@ -111,7 +122,7 @@ class JubeiDesktopApp:
     def _on_switch_character(self) -> None:
         """Cycle character: Jubei -> Katherine -> Komi -> Jubei."""
         if self.mode == "katherine":
-            cmd = "Jubei - Switch - Komi"
+            cmd = "Katherine - Switch - Komi"
         elif self.mode == "komi":
             cmd = "Komi - Switch - Jubei"
         else:
@@ -242,4 +253,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
