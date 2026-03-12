@@ -55,7 +55,7 @@ Slice - Hollywood  (stops Hollywood)
 ```text
 Jubei - Tempel      (plays Temple OS theme)
 Jubei - Tux         (shows Tux, the Linux mascot)
-Jubei - Young       (plays a song)
+Jubei - Young Girl  (plays *Young Girl A* by Pandora-P ft. Kasane Teto)
 Jubei - Kino        (plays Kino - A pack of Cigarettes)
 Jubei - Slice       (stops any playing music)
 Jubei - Creator     (shows creator credits)
@@ -319,7 +319,7 @@ Jubei-Chan has a few hidden commands for fun:
 |---------|--------------|
 | `Jubei - Tempel` | Plays the Temple OS theme from YouTube |
 | `Jubei - Tux` | Shows Tux, the Linux penguin mascot, as ASCII art |
-| `Jubei - Young` | Plays a song from YouTube |
+| `Jubei - Young Girl` | Plays *Young Girl A* by Pandora-P ft. Kasane Teto from YouTube |
 | `Jubei - Kino` | Plays Kino - A pack of Cigarettes from YouTube |
 | `Jubei - Slice` | Stops any music that was started by Tempel, Young, or Kino |
 | `Jubei - Creator` | Shows creator credits (Hector Flores / Mighty Senketsu) |
@@ -707,7 +707,7 @@ For subsequent chat requests, send `"personality": "katherine"` or `"personality
   Jubei - language - en
   ```
 
-- Easter eggs: `Jubei - Tempel`, `Jubei - Tux`, `Jubei - Young`, `Jubei - Kino`, `Jubei - Slice`, `Jubei - Creator`, `Jubei - Mint`, `Jubei - Cinnamon`.
+- Easter eggs: `Jubei - Tempel`, `Jubei - Tux`, `Jubei - Young Girl`, `Jubei - Kino`, `Jubei - Slice`, `Jubei - Creator`, `Jubei - Mint`, `Jubei - Cinnamon`.
 
 - Protect her with an internal API key:
   - Add `JUBIE_API_KEY=your_secret` to `.env` or your shell.

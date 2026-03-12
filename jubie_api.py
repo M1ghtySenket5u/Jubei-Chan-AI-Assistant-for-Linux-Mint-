@@ -360,16 +360,18 @@ def chat() -> Any:
     if _msg_lower in (p + "tux" for p in _easter_egg_prefixes):
         return jsonify({"easter_egg": "tux", "reply": TUX_ASCII_ART.strip()})
 
-    # Easter egg: Young (Young song)
-    if _msg_lower in (p + "young" for p in _easter_egg_prefixes):
+    # Easter egg: Young Girl (song)
+    if _msg_lower in (p + "young girl" for p in _easter_egg_prefixes) or _msg_lower in (
+        p + "young" for p in _easter_egg_prefixes
+    ):
         if _play_youtube_url(EASTER_EGG_YOUNG_URL, console):
             return jsonify(
                 {
-                    "easter_egg": "young",
-                    "reply": "*Young playing!* Type 'Jubei - Slice' to stop.",
+                    "easter_egg": "young_girl",
+                    "reply": "*Young Girl playing!* Type 'Jubei - Slice' to stop.",
                 }
             )
-        return jsonify({"easter_egg": "young", "reply": "Could not open audio."})
+        return jsonify({"easter_egg": "young_girl", "reply": "Could not open audio."})
 
     # Easter egg: Kino - A pack of Cigarettes
     if _msg_lower in (p + "kino" for p in _easter_egg_prefixes):

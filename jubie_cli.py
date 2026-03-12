@@ -106,7 +106,9 @@ KOMI_PERSONALITY = Personality(
 
 # Easter egg URLs and resources
 EASTER_EGG_TEMPEL_URL = "https://youtu.be/hmjU-6tkEc8?si=0QV_sQTMb6TUmoy2"
-EASTER_EGG_YOUNG_URL = "https://youtu.be/1KeCfeDagCE?si=b8V5S6203OuXMBTC"
+EASTER_EGG_YOUNG_URL = (
+    "https://youtu.be/KohVReH6NsY?si=zLYBheLCRVws1oFD"
+)  # Young Girl A by Pandora-P ft. Kasane Teto
 EASTER_EGG_KINO_URL = "https://youtu.be/OWDCuOKYckI?si=P5Y5QNwP5YtS3zCD"  # Kino - A pack of Cigarettes
 
 LINUX_MINT_URL = "https://linuxmint.com/"
@@ -1251,10 +1253,12 @@ def main():
             console.print(f"\n[bold green]{TUX_ASCII_ART}[/bold green]\n")
             continue
 
-        # Easter egg: Young (Young song)
-        if cleaned.lower() in (p + "young" for p in _egg_prefixes):
+        # Easter egg: Young Girl (song)
+        if cleaned.lower() in (p + "young girl" for p in _egg_prefixes) or cleaned.lower() in (
+            p + "young" for p in _egg_prefixes
+        ):
             if _play_youtube_url(EASTER_EGG_YOUNG_URL, console):
-                console.print("\n[bold cyan]* Young playing *[/bold cyan]")
+                console.print("\n[bold cyan]* Young Girl playing *[/bold cyan]")
                 console.print("Type [bold]Jubei - Slice[/bold] to stop.\n")
             else:
                 console.print("[bold red]Could not open audio.[/bold red]\n")
