@@ -116,14 +116,6 @@ class JubeiDesktopApp:
         if img is not None and hasattr(self, "avatar_label"):
             self.avatar_label.configure(image=img)
             self.avatar_label.image = img  # keep reference
-        )
-            "- Type 'Jubei - language - XX' to change language (ja, es, de, ru, en).\n"
-            "- Easter eggs (Jubei, Katherine, or Komi): 'Jubei - Tempel', 'Jubei - Tux', "
-            "'Jubei - Young', 'Jubei - Kino', 'Jubei - Slice' (stop music).\n"
-            "- Easter egg: 'Jubei - Creator' to learn about the creator.\n"
-            "- Easter eggs: 'Jubei - Mint' opens the Linux Mint website; "
-            "'Jubei - Cinnamon' opens the Cinnamon themes website.\n"
-        )
 
     def _build_ui(self) -> None:
         # Main layout: left conversation, right avatar
